@@ -5,6 +5,27 @@ from rvc import Config, load_hubert, get_vc, rvc_infer
 import gc , os, sys, argparse, requests
 from pathlib import Path
 
+
+def extension__tts_generation_webui():
+	main_ui()
+	return {
+		"package_name": "extension_xtts_rvc_ui",
+		"name": "XTTS-RVC-UI",
+		"version": "0.0.1",
+		"requirements": "git+https://github.com/rsxdalv/extension_xtts_rvc_ui@main",
+		"description": "XTTS-RVC-UI is a Gradio UI for XTTSv2 and RVC",
+		"extension_type": "interface",
+		"extension_class": "text-to-speech",
+		"author": "rsxdalv",
+		"extension_author": "rsxdalv",
+		"license": "MIT",
+		"website": "https://github.com/rsxdalv/extension_xtts_rvc_ui",
+		"extension_website": "https://github.com/rsxdalv/extension_xtts_rvc_ui",
+		"extension_platform_version": "0.0.1",
+	}
+		
+
+
 parser = argparse.ArgumentParser(
 	prog='XTTS-RVC-UI',
 	description='Gradio UI for XTTSv2 and RVC'
@@ -64,38 +85,41 @@ def runtts(rvc, voice, text, pitch_change, index_rate, language):
     return ["./output.wav" , "./outputrvc.wav"]
 
 def main():
+	with gr.Blocks(title='TTS RVC UI') as interface:
+		main_ui()
+	interface.launch(server_name="0.0.0.0", server_port=5000, quiet=True)
+
+def main_ui():
 	get_rvc_voices()
 	print(rvcs)
 	print(voices)
-	with gr.Blocks(title='TTS RVC UI') as interface:
-		with gr.Row():
-			gr.Markdown("""
-				#XTTS RVC UI
-			""")
-		with gr.Row(): 
-			with gr.Column():
-				lang_dropdown = gr.Dropdown(choices=langs, value=langs[0], label='Language')
-				rvc_dropdown = gr.Dropdown(choices=rvcs, value=rvcs[0] if len(rvcs) > 0 else '', label='RVC model') 
-				voice_dropdown = gr.Dropdown(choices=voices, value=voices[0] if len(voices) > 0 else '', label='Voice sample')
-				refresh_button = gr.Button(value='Refresh')
-				text_input = gr.Textbox(placeholder="Write here...")
-				submit_button = gr.Button(value='Submit')
-				with gr.Row():
-					pitch_slider = gr.Slider(minimum=-12, maximum=12, value=0, step=1, label="Pitch")
-					index_rate_slider = gr.Slider(minimum=0, maximum=1, value=0.75, step=0.05, label="Index Rate")
-			with gr.Column():        
-				audio_output = gr.Audio(label="TTS result", type="filepath", interactive=False)
-				rvc_audio_output = gr.Audio(label="RVC result", type="filepath", interactive=False)
+	with gr.Row():
+		gr.Markdown("""
+			#XTTS RVC UI
+		""")
+	with gr.Row(): 
+		with gr.Column():
+			lang_dropdown = gr.Dropdown(choices=langs, value=langs[0], label='Language')
+			rvc_dropdown = gr.Dropdown(choices=rvcs, value=rvcs[0] if len(rvcs) > 0 else '', label='RVC model') 
+			voice_dropdown = gr.Dropdown(choices=voices, value=voices[0] if len(voices) > 0 else '', label='Voice sample')
+			refresh_button = gr.Button(value='Refresh')
+			text_input = gr.Textbox(placeholder="Write here...")
+			submit_button = gr.Button(value='Submit')
+			with gr.Row():
+				pitch_slider = gr.Slider(minimum=-12, maximum=12, value=0, step=1, label="Pitch")
+				index_rate_slider = gr.Slider(minimum=0, maximum=1, value=0.75, step=0.05, label="Index Rate")
+		with gr.Column():        
+			audio_output = gr.Audio(label="TTS result", type="filepath", interactive=False)
+			rvc_audio_output = gr.Audio(label="RVC result", type="filepath", interactive=False)
 
-		submit_button.click(inputs=[rvc_dropdown, voice_dropdown, text_input, pitch_slider, index_rate_slider, lang_dropdown], outputs=[audio_output, rvc_audio_output], fn=runtts)
-		def refresh_dropdowns():
-			get_rvc_voices()
-			print('Refreshed voice and RVC list!')
-			return [gr.update(choices=rvcs, value=rvcs[0] if len(rvcs) > 0 else ''),  gr.update(choices=voices, value=voices[0] if len(voices) > 0 else '')] 
+	submit_button.click(inputs=[rvc_dropdown, voice_dropdown, text_input, pitch_slider, index_rate_slider, lang_dropdown], outputs=[audio_output, rvc_audio_output], fn=runtts)
+	def refresh_dropdowns():
+		get_rvc_voices()
+		print('Refreshed voice and RVC list!')
+		return [gr.update(choices=rvcs, value=rvcs[0] if len(rvcs) > 0 else ''),  gr.update(choices=voices, value=voices[0] if len(voices) > 0 else '')] 
 
-		refresh_button.click(fn=refresh_dropdowns, outputs=[rvc_dropdown, voice_dropdown])
+	refresh_button.click(fn=refresh_dropdowns, outputs=[rvc_dropdown, voice_dropdown])
 
-	interface.launch(server_name="0.0.0.0", server_port=5000, quiet=True)
 
 # delete later
 

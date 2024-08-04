@@ -1,7 +1,7 @@
 import torch
 from TTS.api import TTS
 import gradio as gr
-from rvc_embedded import Config, load_hubert, get_vc, rvc_infer
+from extension_xtts_rvc_ui.rvc_embedded import Config, load_hubert, get_vc, rvc_infer
 import gc , os, sys, argparse, requests
 from pathlib import Path
 

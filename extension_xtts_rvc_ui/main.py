@@ -42,23 +42,23 @@ def download_models():
 	rvc_files = ['hubert_base.pt', 'rmvpe.pt']
 
 	for file in rvc_files: 
-		if(not os.path.isfile(f'./models/{file}')):
+		if(not os.path.isfile(f'./data/models/{file}')):
 			print(f'Downloading{file}')
 			r = requests.get(f'https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/{file}')
-			with open(f'./models/{file}', 'wb') as f:
+			with open(f'./data/models/{file}', 'wb') as f:
 					f.write(r.content)
 
 	xtts_files = ['vocab.json', 'config.json', 'dvae.path', 'mel_stats.pth', 'model.pth']
 
 	for file in xtts_files:
-		if(not os.path.isfile(f'./models/xtts/{file}')):
+		if(not os.path.isfile(f'./data/models/xtts/{file}')):
 			print(f'Downloading {file}')
 			r = requests.get(f'https://huggingface.co/coqui/XTTS-v2/resolve/v2.0.2/{file}')
-			with open(f'./models/xtts/{file}', 'wb') as f:
+			with open(f'./data/models/xtts/{file}', 'wb') as f:
 				f.write(r.content)
 				
 
-[Path(_dir).mkdir(parents=True, exist_ok=True) for _dir in ['./models/xtts', './voices', './rvcs']]
+[Path(_dir).mkdir(parents=True, exist_ok=True) for _dir in ['./data/models/xtts', './voices', './rvcs']]
 
 download_models()
 
@@ -66,8 +66,8 @@ device = "cuda:0" if torch.cuda.is_available() else "cpu"
 print("Device: " + device) 
 
 config = Config(device, device != 'cpu')
-hubert_model = load_hubert(device, config.is_half, "./models/hubert_base.pt")
-tts = TTS(model_path="./models/xtts", config_path='./models/xtts/config.json').to(device)
+hubert_model = load_hubert(device, config.is_half, "./data/models/hubert_base.pt")
+tts = TTS(model_path="./data/models/xtts", config_path='./data/models/xtts/config.json').to(device)
 voices = []
 rvcs = []
 langs = ["en", "es", "fr", "de", "it", "pt", "pl", "tr", "ru", "nl", "cs", "ar", "zh-cn", "hu", "ko", "ja", "hi"]

@@ -320,7 +320,7 @@ class VC(object):
                 from extension_xtts_rvc_ui.rmvpe import RMVPE
 
                 self.model_rmvpe = RMVPE(
-                    './models/rmvpe.pt', is_half=self.is_half, device=self.device
+                    './data/models/rmvpe.pt', is_half=self.is_half, device=self.device
                 )
             f0 = self.model_rmvpe.infer_from_audio(x, thred=0.03)
 

@@ -3,14 +3,10 @@ import setuptools
 
 # todo - fix metadata
 setuptools.setup(
-    # name="extension_audiocraft_plus",
 	name="extension_xtts_rvc_ui",
     packages=setuptools.find_namespace_packages(),
-    # version="2.0.3",
-	version="0.0.1",
-    # author="lj1995",
+	version="0.0.2",
 	author="rsxdalv",
-    # description="An easy-to-use Voice Conversion framework based on VITS",
 	description="XTTS-RVC-UI is a Gradio UI for XTTSv2 and RVC",
     # url="https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI",
 	url="https://github.com/rsxdalv/extension_xtts_rvc_ui",

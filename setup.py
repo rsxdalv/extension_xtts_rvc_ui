@@ -5,7 +5,7 @@ import setuptools
 setuptools.setup(
 	name="extension_xtts_rvc_ui",
     packages=setuptools.find_namespace_packages(),
-	version="0.0.2",
+	version="0.1.0",
 	author="rsxdalv",
 	description="XTTS-RVC-UI is a Gradio UI for XTTSv2 and RVC",
     # url="https://github.com/RVC-Project/Retrieval-based-Voice-Conversion-WebUI",

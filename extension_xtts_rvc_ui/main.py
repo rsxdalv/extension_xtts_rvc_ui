@@ -79,6 +79,10 @@ def get_rvc_voices():
 	rvcs = list(filter(lambda x:x.endswith(".pth"), os.listdir("./rvcs")))
 	return [rvcs, voices]
 
+def runtts_only(voice, text, pitch_change, index_rate, language): 
+    audio = tts.tts_to_file(text=text, speaker_wav="./voices/" + voice, language=language, file_path="./output.wav")
+    return "./output.wav"
+
 def runtts(rvc, voice, text, pitch_change, index_rate, language): 
     audio = tts.tts_to_file(text=text, speaker_wav="./voices/" + voice, language=language, file_path="./output.wav")
     voice_change(rvc, pitch_change, index_rate)
@@ -104,7 +108,9 @@ def main_ui():
 			voice_dropdown = gr.Dropdown(choices=voices, value=voices[0] if len(voices) > 0 else '', label='Voice sample')
 			refresh_button = gr.Button(value='Refresh')
 			text_input = gr.Textbox(placeholder="Write here...")
-			submit_button = gr.Button(value='Submit')
+			with gr.Row():
+				generate_only_button = gr.Button(value='Generate')
+				submit_button = gr.Button(value='Generate & RVC', variant="primary")
 			with gr.Row():
 				pitch_slider = gr.Slider(minimum=-12, maximum=12, value=0, step=1, label="Pitch")
 				index_rate_slider = gr.Slider(minimum=0, maximum=1, value=0.75, step=0.05, label="Index Rate")
@@ -113,6 +119,8 @@ def main_ui():
 			rvc_audio_output = gr.Audio(label="RVC result", type="filepath", interactive=False)
 
 	submit_button.click(inputs=[rvc_dropdown, voice_dropdown, text_input, pitch_slider, index_rate_slider, lang_dropdown], outputs=[audio_output, rvc_audio_output], fn=runtts)
+	generate_only_button.click(inputs=[voice_dropdown, text_input, pitch_slider, index_rate_slider, lang_dropdown], outputs=[audio_output], fn=runtts_only)
+
 	def refresh_dropdowns():
 		get_rvc_voices()
 		print('Refreshed voice and RVC list!')

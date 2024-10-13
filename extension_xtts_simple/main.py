@@ -25,7 +25,7 @@ def extension__tts_generation_webui():
     return {
         "package_name": "extension_xtts_simple",
         "name": "XTTS-Simple",
-        "version": "0.1.4",
+        "version": "0.1.5",
         "requirements": "git+https://github.com/rsxdalv/extension_xtts_rvc_ui@simple",
         "description": "XTTS-Simple is a Gradio UI for XTTSv2",
         "extension_type": "interface",
@@ -100,99 +100,100 @@ def run_xtts(
     )
     import numpy as np
 
-    # return (tts.config.audio["output_sample_rate"], np.array(wav))  # type: ignore
     return {
-        "audio_out": (tts.config.audio["output_sample_rate"], np.array(wav)), # type: ignore
+        "audio_out": (tts.config.audio["output_sample_rate"], np.array(wav)),  # type: ignore
     }
 
 
 languages = [
-    "en",
-    "es",
-    "fr",
-    "de",
-    "it",
-    "pt",
-    "pl",
-    "tr",
-    "ru",
-    "nl",
-    "cs",
-    "ar",
-    "zh-cn",
-    "hu",
-    "ko",
-    "ja",
-    "hi",
+    ("English", "en"),
+    ("Spanish", "es"),
+    ("French", "fr"),
+    ("German", "de"),
+    ("Italian", "it"),
+    ("Portuguese", "pt"),
+    ("Polish", "pl"),
+    ("Turkish", "tr"),
+    ("Russian", "ru"),
+    ("Dutch", "nl"),
+    ("Czech", "cs"),
+    ("Arabic", "ar"),
+    ("Chinese", "zh-cn"),
+    ("Hungarian", "hu"),
+    ("Korean", "ko"),
+    ("Japanese", "ja"),
+    ("Hindi", "hi"),
 ]
 
 
 def main_ui():
-    with gr.Row():
-        gr.Markdown(
+    with gr.Column():
+        with gr.Row():
+            gr.Markdown(
+                """
+                # XTTS-Simple
+                A simple UI for XTTS-v2.
             """
-			# XTTS-Simple
-			A simple UI for XTTS-v2.
-		"""
+            )
+        with gr.Row():
+            with gr.Column():
+                model_name = model_select_ui(
+                    [],
+                    "xtts",
+                    gr.Dropdown,
+                )
+                language = gr.Dropdown(
+                    choices=languages,
+                    value="en",
+                    label="Language",
+                )
+                voice = gr.Audio(
+                    label="Voice sample",
+                    type="filepath",
+                    sources=["upload", "microphone"],
+                )
+
+            with gr.Column():
+                speaker = gr.Dropdown(
+                    choices=[],
+                    label="Speaker name (Only for multi-speaker models)",
+                )
+                gr.Button("Refresh speakers", variant="secondary").click(
+                    fn=lambda model_name: gr.Dropdown(
+                        choices=get_xtts(model_name).speakers
+                    ),
+                    inputs=[model_name],
+                    outputs=[speaker],
+                    api_name="xtts_simple_refresh_speakers",
+                )
+                seed, randomize_seed_callback = randomize_seed_ui()
+                unload_model_button("xtts_simple")
+                generate_button = gr.Button(value="Generate")
+
+        text = gr.Textbox(placeholder="Write here...")
+        audio_out = gr.Audio(label="TTS result", type="filepath")
+
+        generate_button.click(
+            **randomize_seed_callback,
+        ).then(
+            **dictionarize(
+                fn=run_xtts,
+                inputs={
+                    model_name: "model_name",
+                    seed: "seed",
+                    text: "text",
+                    voice: "voice",
+                    language: "language",
+                    speaker: "speaker",
+                },
+                outputs={
+                    "audio_out": audio_out,
+                    "metadata": gr.JSON(visible=False),
+                    "folder_root": gr.Textbox(visible=False),
+                },
+            ),
+            api_name="xtts_simple",
         )
-    with gr.Row():
-        with gr.Column():
-            model_name = model_select_ui(
-                [("Base", "base")],
-                "xtts",
-            )
-            language = gr.Dropdown(
-                choices=languages,
-                value="en",
-                label="Language",
-            )
-            voice = gr.Audio(
-                label="Voice sample",
-                type="filepath",
-                sources=["upload", "microphone"],
-            )
-
-        with gr.Column():
-            speaker = gr.Dropdown(
-                choices=[],
-                label="Speaker name (Only for multi-speaker models)",
-            )
-            gr.Button("Refresh speakers", variant="secondary").click(
-                fn=lambda model_name: gr.Dropdown(
-                    choices=get_xtts(model_name).speakers
-                ),
-                inputs=[model_name],
-                outputs=[speaker],
-                api_name="xtts_simple_refresh_speakers",
-            )
-            seed, randomize_seed_callback = randomize_seed_ui()
-            unload_model_button("xtts_simple")
-            generate_button = gr.Button(value="Generate")
-
-    text = gr.Textbox(placeholder="Write here...")
-    audio_out = gr.Audio(label="TTS result", type="filepath")
-
-    generate_button.click(
-        **randomize_seed_callback,
-    ).then(
-        **dictionarize(
-            fn=run_xtts,
-            inputs={
-                model_name: "model_name",
-                seed: "seed",
-                text: "text",
-                voice: "voice",
-                language: "language",
-                speaker: "speaker",
-            },
-            outputs={
-                "audio_out": audio_out,
-                "metadata": gr.JSON(visible=False),
-                "folder_root": gr.Textbox(visible=False),
-            },
-        ),
-        api_name="xtts_simple",
-    )
 
 
 def main():

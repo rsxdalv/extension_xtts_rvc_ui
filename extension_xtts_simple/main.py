@@ -167,7 +167,7 @@ def main_ui():
 
     seed, randomize_seed_callback = randomize_seed_ui()
 
-    unload_model_button("maha_tts")
+    unload_model_button("xtts_simple")
 
     generate_only_button.click(
         **randomize_seed_callback,

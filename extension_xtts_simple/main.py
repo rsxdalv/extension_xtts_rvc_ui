@@ -25,7 +25,7 @@ def extension__tts_generation_webui():
     return {
         "package_name": "extension_xtts_simple",
         "name": "XTTS-Simple",
-        "version": "0.1.5",
+        "version": "0.1.6",
         "requirements": "git+https://github.com/rsxdalv/extension_xtts_rvc_ui@simple",
         "description": "XTTS-Simple is a Gradio UI for XTTSv2",
         "extension_type": "interface",
@@ -60,15 +60,15 @@ def download_models():
 
 
 @manage_model_state("xtts_simple")
-def get_xtts(model_name: str):
+def get_xtts(model_path: str):
     from TTS.api import TTS
 
     download_models()
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
     print("XTTS Device: " + device)
     return TTS(
-        model_path=f"./data/models/xtts/{model_name}",
-        config_path=f"./data/models/xtts/{model_name}/config.json",
+        model_path=model_path,
+        config_path=os.path.join(model_path, "config.json"),
     ).to(device)
 
 
@@ -138,7 +138,7 @@ def main_ui():
         with gr.Row():
             with gr.Column():
                 model_name = model_select_ui(
-                    [],
+                    [("base", "base")],
                     "xtts",
                     gr.Dropdown,
                 )

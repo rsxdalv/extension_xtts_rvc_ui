@@ -25,7 +25,7 @@ def extension__tts_generation_webui():
     return {
         "package_name": "extension_xtts_simple",
         "name": "XTTS-Simple",
-        "version": "0.1.1",
+        "version": "0.1.2",
         "requirements": "git+https://github.com/rsxdalv/extension_xtts_rvc_ui@simple",
         "description": "XTTS-Simple is a Gradio UI for XTTSv2",
         "extension_type": "interface",
@@ -156,6 +156,7 @@ def main_ui():
                 fn=lambda model_name: gr.Dropdown(
                     choices=get_xtts(model_name).speakers
                 ),
+                inputs=[model_name],
                 outputs=[speaker],
                 api_name="xtts_simple_refresh_speakers",
             )

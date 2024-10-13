@@ -25,7 +25,7 @@ def extension__tts_generation_webui():
     return {
         "package_name": "extension_xtts_simple",
         "name": "XTTS-Simple",
-        "version": "0.1.3",
+        "version": "0.1.4",
         "requirements": "git+https://github.com/rsxdalv/extension_xtts_rvc_ui@simple",
         "description": "XTTS-Simple is a Gradio UI for XTTSv2",
         "extension_type": "interface",
@@ -151,6 +151,8 @@ def main_ui():
                 type="filepath",
                 sources=["upload", "microphone"],
             )
+
+        with gr.Column():
             speaker = gr.Dropdown(
                 choices=[],
                 label="Speaker name (Only for multi-speaker models)",
@@ -163,16 +165,14 @@ def main_ui():
                 outputs=[speaker],
                 api_name="xtts_simple_refresh_speakers",
             )
-            text = gr.Textbox(placeholder="Write here...")
-            generate_only_button = gr.Button(value="Generate")
+            seed, randomize_seed_callback = randomize_seed_ui()
+            unload_model_button("xtts_simple")
+            generate_button = gr.Button(value="Generate")
 
-        with gr.Column():
-            audio_out = gr.Audio(label="TTS result", type="filepath")
-        seed, randomize_seed_callback = randomize_seed_ui()
+    text = gr.Textbox(placeholder="Write here...")
+    audio_out = gr.Audio(label="TTS result", type="filepath")
 
-    unload_model_button("xtts_simple")
-
-    generate_only_button.click(
+    generate_button.click(
         **randomize_seed_callback,
     ).then(
         **dictionarize(

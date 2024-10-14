@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2022",
     "lib": [
       "dom",
       "dom.iterable",
@@ -10,15 +10,15 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "incremental": true,
     "noImplicitAny": false,
+    "declaration": true,
     "outDir": "./dist/",
     "paths": {
       "@/*": [
@@ -38,7 +38,8 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ],
   "ts-node": {
     "esm": true

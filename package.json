@@ -2,7 +2,7 @@
     "name": "@tts-webui/extension_xtts_simple",
     "version": "0.0.3",
     "description": "XTTS-Simple is a Gradio UI for XTTSv2",
-    "main": "src/index.ts",
+    "main": "src/index.tsx",
     "author": "rsxdalv",
     "license": "MIT"
 }

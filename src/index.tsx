@@ -1,6 +1,4 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-// import { Button } from "tts-generation-webui-react/src/components/ui/button";
 import { DeleteIcon, TrashIcon } from "lucide-react";
 
 type HuggingFaceCache = {
@@ -8,7 +6,7 @@ type HuggingFaceCache = {
   rows: Object[];
 };
 
-export default ({}) => {
+export default ({ Button }) => {
   const [huggingFaceCache, setHuggingFaceCache] =
     React.useState<HuggingFaceCache>({
       headers: [],

@@ -5,15 +5,17 @@ from pathlib import Path
 from tts_webui.utils.list_dir_models import model_select_ui, unload_model_button
 from tts_webui.utils.randomize_seed import randomize_seed_ui
 from tts_webui.utils.manage_model_state import manage_model_state
-from tts_webui.decorators.gradio_dict_decorator import dictionarize
-from tts_webui.decorators.decorator_apply_torch_seed import decorator_apply_torch_seed
-from tts_webui.decorators.decorator_log_generation import decorator_log_generation
-from tts_webui.decorators.decorator_save_metadata import decorator_save_metadata
-from tts_webui.decorators.decorator_save_wav import decorator_save_wav
-from tts_webui.decorators.decorator_add_base_filename import decorator_add_base_filename
-from tts_webui.decorators.decorator_add_date import decorator_add_date
-from tts_webui.decorators.decorator_add_model_type import decorator_add_model_type
-from tts_webui.decorators.log_function_time import log_function_time
+from tts_webui.decorators import (
+    decorator_apply_torch_seed,
+    decorator_log_generation,
+    decorator_save_metadata,
+    decorator_save_wav,
+    decorator_add_base_filename,
+    decorator_add_date,
+    decorator_add_model_type,
+    log_function_time,
+    dictionarize,
+)
 from tts_webui.extensions_loader.decorator_extensions import (
     decorator_extension_outer,
     decorator_extension_inner,
